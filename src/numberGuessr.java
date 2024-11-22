@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -5,13 +6,15 @@ public class numberGuessr{
 
     private final static Scanner sc = new Scanner(System.in);
     private static int lives = 5;
+    private final static String GUESSTEXT = "Guess the number (must be greater or equal to 0): ";
+    private final static String TRYAGAINTEXT = "Try again :(";
+    private final static String YOUWONTEXT = "YOU WON!";
+    private final static String YOULOSTTEXT = "You lost :( The number was: ";
+    private final static String MAXNUMBERTEXT = "Select the max number (0-n): ";
+    private final static String NOTPOSITIVENUMBERTEXT = "Number must be greater or equal to 0, try again: ";
+    private final static String INVALIDINPUTTEXT = "Invalid input. Please input a valid number: ";
 
     public static void main(String[] args){
-        final String GUESSTEXT = "Guess the number: ";
-        final String TRYAGAINTEXT = "Try again :(";
-        final String YOUWONTEXT = "YOU WON!";
-        final String YOULOSTTEXT = "You lost :(";
-        final String MAXNUMBERTEXT = "Select the max number (0-n): ";
         int maxNumber;
         int randomNumber;
 
@@ -30,7 +33,7 @@ public class numberGuessr{
                     System.out.println(TRYAGAINTEXT);
                 }
                 else{
-                    System.out.println(YOULOSTTEXT);
+                    System.out.println(YOULOSTTEXT + randomNumber);
                 }
             }
             else{
@@ -49,13 +52,30 @@ public class numberGuessr{
     private static boolean tryGuess(int randomNumber){
         int guess;
 
-        guess = sc.nextInt();
+        guess = readValidInteger();
 
-        if (guess == randomNumber){
-            return true;
+        return guess == randomNumber;
+    }
+
+    private static int readValidInteger(){
+        int guess;
+
+        while (true){
+
+            try{
+                guess = sc.nextInt();
+
+                if (guess >= 0){
+                    return guess;
+                }
+                else{
+                    System.out.println(NOTPOSITIVENUMBERTEXT);
+                }
+            }
+            catch(InputMismatchException e){
+                System.out.println(INVALIDINPUTTEXT);
+                sc.next();
+            }
         }
-
-        return false;
     }
 }
-//TODO try-except
